@@ -1,0 +1,43 @@
+group 'com.printer.flutterandroidprinter'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+        flatDir {
+            dirs project(':flutterandroidprinter').file('libs')
+        }
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+dependencies{
+    implementation(name: 'payLib', ext: 'aar')
+    // https://mvnrepository.com/artifact/com.google.zxing/core
+    compileOnly(name: 'core-3.4.0', ext: 'jar')
+    implementation 'com.google.zxing:core:3.3.3'
+}

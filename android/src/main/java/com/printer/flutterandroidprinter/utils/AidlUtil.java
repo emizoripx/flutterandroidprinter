@@ -38,11 +38,6 @@ public class AidlUtil {
         return mAidlUtil;
     }
 
-    /**
-     * 连接服务
-     *
-     * @param context context
-     */
     public void connectPrinterService(Context context) {
         this.context = context.getApplicationContext();
         Intent intent = new Intent();
@@ -52,11 +47,7 @@ public class AidlUtil {
         context.getApplicationContext().bindService(intent, connService, Context.BIND_AUTO_CREATE);
     }
 
-    /**
-     * 断开服务
-     *
-     * @param context context
-     */
+
     public void disconnectPrinterService(Context context) {
         if (woyouService != null) {
             context.getApplicationContext().unbindService(connService);
@@ -105,9 +96,7 @@ public class AidlUtil {
         };
     }
 
-    /**
-     * 设置打印浓度
-     */
+
     private int[] darkness = new int[] { 0x0600, 0x0500, 0x0400, 0x0300, 0x0200, 0x0100, 0, 0xffff, 0xfeff, 0xfdff,
             0xfcff, 0xfbff, 0xfaff };
 
@@ -125,11 +114,6 @@ public class AidlUtil {
         }
     }
 
-    /**
-     * 取得打印机系统信息，放在list中
-     *
-     * @return list
-     */
     public List<String> getPrinterInfo(PrinterCallback printerCallback1, PrinterCallback printerCallback2) {
         if (woyouService == null) {
             return null;
@@ -158,9 +142,6 @@ public class AidlUtil {
         return info;
     }
 
-    /**
-     * 初始化打印机
-     */
     public void initPrinter() {
         if (woyouService == null) {
             return;
@@ -181,9 +162,7 @@ public class AidlUtil {
         }
     }
 
-    /**
-     * 打印二维码
-     */
+
     public void printQr(String data, int modulesize, int errorlevel) {
         if (woyouService == null) {
             return;
@@ -198,9 +177,6 @@ public class AidlUtil {
         }
     }
 
-    /**
-     * 打印条形码
-     */
     public void printBarCode(String data, int symbology, int height, int width, int textposition) {
         if (woyouService == null) {
             return;
@@ -213,9 +189,6 @@ public class AidlUtil {
         }
     }
 
-    /**
-     * 打印文字
-     */
     public void printText(String content, float size, boolean isBold, boolean isUnderLine) {
         if (woyouService == null) {
             return;
@@ -240,9 +213,6 @@ public class AidlUtil {
         }
     }
 
-    /*
-     * 打印图片
-     */
     public void printBitmap(Bitmap bitmap, int align) {
         if (woyouService == null) {
             return;
@@ -265,25 +235,22 @@ public class AidlUtil {
         }
     }
 
-    /**
-     * 打印图片和文字按照指定排列顺序
-     */
     public void printBitmap2(Bitmap bitmap, int orientation) {
         if (woyouService == null) {
-            Toast.makeText(context, "服务已断开！", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Servicio Desconectado！", Toast.LENGTH_LONG).show();
             return;
         }
         try {
             if (orientation == 0) {
                 woyouService.printBitmap(bitmap, null);
-                woyouService.printText("横向排列\n", null);
+                woyouService.printText("Disposición horizontal\n", null);
                 woyouService.printBitmap(bitmap, null);
-                woyouService.printText("横向排列\n", null);
+                woyouService.printText("Disposición horizontal\n", null);
             } else {
                 woyouService.printBitmap(bitmap, null);
-                woyouService.printText("\n纵向排列\n", null);
+                woyouService.printText("\nDispuesto verticalmente\n", null);
                 woyouService.printBitmap(bitmap, null);
-                woyouService.printText("\n纵向排列\n", null);
+                woyouService.printText("\nDispuesto verticalmente\n", null);
             }
             woyouService.lineWrap(3, null);
 
@@ -292,9 +259,6 @@ public class AidlUtil {
         }
     }
 
-    /**
-     * 打印表格
-     */
     public void printTable(LinkedList<TableItem> list) {
         if (woyouService == null) {
             return;
@@ -308,9 +272,6 @@ public class AidlUtil {
         }
     }
 
-    /**
-     * 打印表格项
-     */
     public void printTableItem(String[] text, int[] width, int[] align) {
         if (woyouService == null) {
             return;
@@ -322,9 +283,6 @@ public class AidlUtil {
         }
     }
 
-    /*
-     * 空打三行！
-     */
     public void print3Line() {
         if (woyouService == null) {
             return;

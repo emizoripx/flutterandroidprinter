@@ -17,7 +17,6 @@ public class Base64Utils {
                     -1, -1, -1};
 
     /**
-     * 加密
      *
      * @param data
      * @return
@@ -53,8 +52,6 @@ public class Base64Utils {
     }
 
     /**
-     * 解密
-     *
      * @param str
      * @return
      */

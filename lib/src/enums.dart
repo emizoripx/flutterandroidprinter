@@ -18,8 +18,15 @@ class SunmiSize {
   const SunmiSize._internal(this.value);
   final int value;
   static const xs = SunmiSize._internal(14);
+  static const xs15 = SunmiSize._internal(15);
+  static const xs16 = SunmiSize._internal(16);
+  static const xs17 = SunmiSize._internal(17);
   static const sm = SunmiSize._internal(18);
+  static const sm20 = SunmiSize._internal(20);
+  static const sm22 = SunmiSize._internal(22);
   static const md = SunmiSize._internal(24);
+  static const md26 = SunmiSize._internal(26);
+  static const md28 = SunmiSize._internal(28);
   static const lg = SunmiSize._internal(36);
   static const xl = SunmiSize._internal(42);
 }

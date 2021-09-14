@@ -30,3 +30,12 @@ class SunmiSize {
   static const lg = SunmiSize._internal(36);
   static const xl = SunmiSize._internal(42);
 }
+
+class SunmiErrorCorrectionLevel {
+  const SunmiErrorCorrectionLevel._internal(this.value);
+  final String value;
+  static const M = SunmiErrorCorrectionLevel._internal('M');
+  static const L = SunmiErrorCorrectionLevel._internal('L');
+  static const Q = SunmiErrorCorrectionLevel._internal('Q');
+  static const H = SunmiErrorCorrectionLevel._internal('H');
+}

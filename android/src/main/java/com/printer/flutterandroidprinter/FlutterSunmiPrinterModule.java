@@ -157,7 +157,7 @@ public class FlutterSunmiPrinterModule {
     // AidlUtil.getInstance().lineWrap(1);
   }
 
-  public void printQr(String text, int align, int size) {
-    AidlUtil.getInstance().printBitmap(BitmapUtil.generateBitmap(text,9,size,size), align);
+  public void printQr(String text, int align, int size, String errorCorrectionLevel) {
+    AidlUtil.getInstance().printBitmap(BitmapUtil.generateBitmap(text,9,size,size, errorCorrectionLevel), align);
   }
 }

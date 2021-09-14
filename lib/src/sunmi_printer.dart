@@ -137,12 +137,13 @@ class SunmiPrinter {
       String text, {
         SunmiAlign align: SunmiAlign.center,
         int size: 200,
+        SunmiErrorCorrectionLevel errorCorrectionLevel: SunmiErrorCorrectionLevel.M,
       }) async {
     await _channel.invokeMethod(PRINT_QR, {
       "text": text,
       "align": align.value,
       "size": size,
-
+      "errorCorrectionLevel": errorCorrectionLevel.value,
     });
   }
 }

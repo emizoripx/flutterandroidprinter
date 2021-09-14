@@ -107,7 +107,9 @@ public class FlutterSunmiPrinterPlugin implements FlutterPlugin, MethodCallHandl
       String base64 = call.argument("text");
       int align = call.argument("align");
       int size = call.argument("size");
-      flutterSunmiPrinterModule.printQr(base64, align, size);
+      String errorCorrectionLevel = call.argument("errorCorrectionLevel");
+
+      flutterSunmiPrinterModule.printQr(base64, align, size, errorCorrectionLevel);
       result.success(null);
     } else {
       result.notImplemented();

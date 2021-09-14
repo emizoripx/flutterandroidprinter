@@ -26,7 +26,7 @@ public class BitmapUtil {
      * @param height
      * @return
      */
-    public static Bitmap generateBitmap(String content, int format, int width, int height) {
+    public static Bitmap generateBitmap(String content, int format, int width, int height, String errorCorrectionLevel) {
         if (content == null || content.equals(""))
             return null;
         BarcodeFormat barcodeFormat;
@@ -66,10 +66,35 @@ public class BitmapUtil {
                 height = width;
                 break;
         }
+
         MultiFormatWriter qrCodeWriter = new MultiFormatWriter();
         Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.CHARACTER_SET, "GBK");
-        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+
+        ErrorCorrectionLevel errorCorrectionLevel1;
+        if(errorCorrectionLevel != null) {
+            switch (errorCorrectionLevel) {
+                case "L":
+                    hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+                    break;
+                case "M":
+                    hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
+                    break;
+                case "Q":
+                    hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.Q);
+                    break;
+                case "H":
+                    hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+                    break;
+                default:
+                    hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
+                    break;
+            }
+        } else {
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
+        }
+
+//        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
         try {
             BitMatrix encode = qrCodeWriter.encode(content, barcodeFormat, width, height, hints);
             int[] pixels = new int[width * height];

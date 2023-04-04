@@ -147,3 +147,25 @@ class SunmiPrinter {
     });
   }
 }
+
+class ZebraPrinter {
+  final String mac;
+  String friendlyName = "Unknown";
+
+  static const String PRINT_ZEBRA = "printZebra";
+
+
+  ZebraPrinter(this.mac, this.friendlyName);
+
+
+
+  static const MethodChannel _channel =
+  const MethodChannel('flutterandroidprinter');
+
+  Future<void> printZebra(String data) async {
+    await _channel.invokeMethod(PRINT_ZEBRA, {"mac": mac, "data": data});
+  }
+
+
+}
+

@@ -9,6 +9,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
+
 public class FlutterSunmiPrinterPlugin implements FlutterPlugin, MethodCallHandler {
   private MethodChannel channel;
   private static FlutterSunmiPrinterModule flutterSunmiPrinterModule;
@@ -26,6 +27,7 @@ public class FlutterSunmiPrinterPlugin implements FlutterPlugin, MethodCallHandl
   private String PRINT_ROW = "printRow";
   private String PRINT_IMAGE = "printImage";
   private String PRINT_QR = "printQr";
+  private String GETSN = "getSN";
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -111,10 +113,15 @@ public class FlutterSunmiPrinterPlugin implements FlutterPlugin, MethodCallHandl
 
       flutterSunmiPrinterModule.printQr(base64, align, size, errorCorrectionLevel);
       result.success(null);
+    }  else if (call.method.equals(GETSN)) {
+      String responseSN = flutterSunmiPrinterModule.getSN();
+      result.success(responseSN);
     } else {
       result.notImplemented();
     }
   }
+
+
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {

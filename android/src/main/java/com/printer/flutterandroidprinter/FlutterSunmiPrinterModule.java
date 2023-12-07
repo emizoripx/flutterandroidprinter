@@ -13,6 +13,8 @@ import java.io.BufferedInputStream;
 import java.util.List;
 import android.net.Uri;
 import android.os.Build;
+import java.lang.reflect.Method;
+import android.annotation.SuppressLint;
 
 import com.printer.flutterandroidprinter.utils.AidlUtil;
 import com.printer.flutterandroidprinter.utils.Base64Utils;
@@ -205,5 +207,42 @@ public class FlutterSunmiPrinterModule {
   public void printQr(String text, int align, int size, String errorCorrectionLevel) {
 //    AidlUtil.getInstance().printBitmap(BitmapUtil.generateBitmap(text,9,size,size, errorCorrectionLevel), align);
     AidlUtil.getInstance().printQr(text, size, errorCorrectionLevel, align);
+  }
+
+  @SuppressLint({"MissingPermission", "PrivateApi"})
+  public static String getSN() {
+    String serial = null;
+    Class<?> c = null;
+    try {
+      c = Class.forName("android.os.SystemProperties");
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    Method get = null;
+    try {
+      get = c.getMethod("get", String.class);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    if (Build.VERSION.SDK_INT >= 30) {
+      try {
+        serial = (String)get.invoke(c, "ro.sunmi.serial");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      return serial;
+    } else if (Build.VERSION.SDK_INT >= 26) {
+      serial = Build.getSerial();
+      return serial;
+    } else {
+      //安卓8以下使用Build.SERIAL相同方式
+      //return Build.SERIAL;
+      try {
+        serial = (String) get.invoke(c, "ro.serialno");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      return serial;
+    }
   }
 }

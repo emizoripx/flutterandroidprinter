@@ -8,6 +8,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterandroidprinter/src/enums.dart';
 import 'sunmi_col.dart';
@@ -27,6 +28,7 @@ class SunmiPrinter {
   static const String PRINT_ROW = "printRow";
   static const String PRINT_IMAGE = "printImage";
   static const String PRINT_QR = "printQr";
+  static const String GETSN = "getSN";
 
   static const MethodChannel _channel =
       const MethodChannel('flutterandroidprinter');
@@ -145,5 +147,11 @@ class SunmiPrinter {
       "size": size,
       "errorCorrectionLevel": errorCorrectionLevel.value,
     });
+  }
+
+  static Future<String?> getSn() async {
+    final isAndroid = defaultTargetPlatform == TargetPlatform.android;
+    if (!isAndroid) return null;
+    return _channel.invokeMethod<String?>(GETSN);
   }
 }

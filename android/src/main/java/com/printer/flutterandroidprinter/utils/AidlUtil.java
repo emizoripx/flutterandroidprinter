@@ -31,6 +31,7 @@ import com.sunmi.printerx.style.BitmapStyle;
 import com.sunmi.printerx.style.QrStyle;
 import com.sunmi.printerx.style.TextStyle;
 import com.sunmi.printerx.PrinterSdk;
+import com.sunmi.printerx.enums.Symbology;
 
 
 public class AidlUtil {
@@ -48,33 +49,33 @@ public class AidlUtil {
         return mAidlUtil;
     }
 
-    public List<String> getPrinterInfo(PrinterCallback printerCallback1, PrinterCallback printerCallback2) {
-//        if (woyouService == null) {
-//            return null;
-//        }
-
-        List<String> info = new ArrayList<>();
-//        PackageManager packageManager = context.getPackageManager();
-//        try {
-//            woyouService.getPrintedLength(generateCB(printerCallback1));
-//            woyouService.getPrinterFactory(generateCB(printerCallback2));
-//            info.add(woyouService.getPrinterSerialNo());
-//            info.add(woyouService.getPrinterModal());
-//            info.add(woyouService.getPrinterVersion());
-//            PackageInfo packageInfo = packageManager.getPackageInfo(SERVICE＿PACKAGE, 0);
-//            if (packageInfo != null) {
-//                info.add(packageInfo.versionName);
-//                info.add(packageInfo.versionCode + "");
-//            } else {
-//                info.add("");
-//                info.add("");
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-        return info;
-    }
+//    public List<String> getPrinterInfo(PrinterCallback printerCallback1, PrinterCallback printerCallback2) {
+////        if (woyouService == null) {
+////            return null;
+////        }
+//
+//        List<String> info = new ArrayList<>();
+////        PackageManager packageManager = context.getPackageManager();
+////        try {
+////            woyouService.getPrintedLength(generateCB(printerCallback1));
+////            woyouService.getPrinterFactory(generateCB(printerCallback2));
+////            info.add(woyouService.getPrinterSerialNo());
+////            info.add(woyouService.getPrinterModal());
+////            info.add(woyouService.getPrinterVersion());
+////            PackageInfo packageInfo = packageManager.getPackageInfo(SERVICE＿PACKAGE, 0);
+////            if (packageInfo != null) {
+////                info.add(packageInfo.versionName);
+////                info.add(packageInfo.versionCode + "");
+////            } else {
+////                info.add("");
+////                info.add("");
+////            }
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        }
+//
+//        return info;
+//    }
 
     /**
      * Metodo para iniciar la impresion, siempre se debe ejecutar este metodo para inciar la impresion
@@ -97,7 +98,11 @@ public class AidlUtil {
      * Metodo para finalizar la impresion, siempre se debe ejecutar este metodo para terminar la impresion.
      */
     public void endPrinter(){
-        this.lineApi.autoOut();
+        try{
+            this.lineApi.autoOut();
+        } catch (SdkException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setFontSize(int sizeFont) {
@@ -110,28 +115,42 @@ public class AidlUtil {
     }
 
 
-    public void printQr(String data, int modulesize, int errorlevel) {
+    public void printQr(String data, int modulesize, String errorlevel, int align) {
         if (lineApi == null) {
             return;
         }
-        String levelError = "M";
-        switch (errorlevel){
+//        String levelError = "M";
+//        switch (errorlevel){
+//            case 0:
+//                levelError = "L";
+//                break;
+//            case 1:
+//                levelError = "M";
+//                break;
+//            case 2:
+//                levelError = "Q";
+//                break;
+//            case 3:
+//                levelError = "H";
+//                break;
+//        }
+
+        Align position = Align.DEFAULT;
+        switch (align){
             case 0:
-                levelError = "L";
+                position = Align.LEFT;
                 break;
             case 1:
-                levelError = "M";
+                position = Align.CENTER;
                 break;
             case 2:
-                levelError = "Q";
+                position = Align.RIGHT;
                 break;
-            case 3:
-                levelError = "H";
-                break;
-        }
+        };
 
         try {
-            lineApi.printQrCode(data, QrStyle.getStyle().setAlign(Align.CENTER).setWidth(modulesize).setHeight(modulesize).setErrorLevel(ErrorLevel.valueOf(levelError)));
+            lineApi.printQrCode(data, QrStyle.getStyle().setAlign(position).setWidth(modulesize).setHeight(modulesize).setErrorLevel(ErrorLevel.valueOf(errorlevel)));
+            lineApi.initLine(BaseStyle.getStyle());
         } catch (SdkException e) {
             e.printStackTrace();
         }
@@ -159,7 +178,7 @@ public class AidlUtil {
                     .setHeight(height)
                     .setWidth(width)
                     .setDotWidth(2)
-                    .setSymbology(Symbology.valueOf(symbology))
+                    .setSymbology(Symbology.valueOf(Symbology.valueOf(symbology)))
                     .setReadable(HumanReadable.valueOf(position));
             lineApi.printBarCode(data, barcodeStyle);
         } catch (SdkException e) {
@@ -167,7 +186,7 @@ public class AidlUtil {
         }
     }
 
-    public void printText(String content, float size, boolean isBold, boolean isUnderLine) {
+    public void printText(String content, int size, boolean isBold, boolean isUnderLine, int align) {
         if (lineApi == null) {
             return;
         }
@@ -187,7 +206,21 @@ public class AidlUtil {
                 textStyle = textStyle.enableUnderline(false);
 //                woyouService.sendRAWData(ESCUtil.underlineOff(), null);
             }
+
+
+            switch (align){
+                case 0:
+                    textStyle = textStyle.setAlign(Align.LEFT);
+                    break;
+                case 1:
+                    textStyle = textStyle.setAlign(Align.CENTER);
+                    break;
+                case 2:
+                    textStyle = textStyle.setAlign(Align.RIGHT);
+                    break;
+            }
             textStyle = textStyle.setTextSize(size);
+
             lineApi.printText(content, textStyle);
 //            woyouService.printTextWithFont(content, null, size, null);
             // woyouService.lineWrap(3, null);
@@ -202,19 +235,19 @@ public class AidlUtil {
         }
 
         try {
-            String position = "DEFAULT";
+            Align position = Align.DEFAULT;
             switch (align){
+                case 0:
+                    position = Align.LEFT;
+                    break;
                 case 1:
-                    position = "LEFT";
+                    position = Align.CENTER;
                     break;
                 case 2:
-                    position = "CENTER";
+                    position = Align.RIGHT;
                     break;
-                case 3:
-                    position = "RIGHT";
-                    break;
-            }
-            lineApi.printBitmap(bitmap, BitmapStyle.getStyle().setAlign(Align.valueOf(position)).setAlgorithm(ImageAlgorithm.DITHERING).setWidth(384).setHeight(150));
+            };
+            lineApi.printBitmap(bitmap, BitmapStyle.getStyle().setAlign(position).setAlgorithm(ImageAlgorithm.DITHERING).setWidth(384).setHeight(150));
 //            woyouService.setAlignment(align, null);
 //            woyouService.printBitmap(bitmap, null);
 //            woyouService.lineWrap(1, null);
@@ -236,7 +269,7 @@ public class AidlUtil {
     }
 
     public void printTable(LinkedList<TableItem> list) {
-        if (woyouService == null) {
+        if (lineApi == null) {
             return;
         }
         try {
@@ -245,20 +278,21 @@ public class AidlUtil {
                 TextStyle[] styles = new TextStyle[tableItem.getAlign().length];
                 for (int indice= 0; indice < tableItem.getAlign().length; indice ++){
                     int alignData = tableItem.getAlign()[indice];
-                    String position = "DEFAULT";
+                    TextStyle textStyle = TextStyle.getStyle();
+
                     switch (alignData){
+                        case 0:
+                            textStyle = textStyle.setAlign(Align.LEFT);
+                            break;
                         case 1:
-                            position = "LEFT";
+                            textStyle = textStyle.setAlign(Align.CENTER);
                             break;
                         case 2:
-                            position = "CENTER";
+                            textStyle = textStyle.setAlign(Align.RIGHT);
                             break;
-                        case 3:
-                            position = "RIGHT";
-                            break;
-                    }
+                    };
 
-                    styles[indice] = TextStyle.getStyle().setAlign(Align.valueOf(position));
+                    styles[indice] = textStyle;
                 }
 
                 lineApi.printTexts(tableItem.getText(), tableItem.getWidth(), styles);
@@ -269,7 +303,7 @@ public class AidlUtil {
         }
     }
 
-    public void printTableItem(String[] text, int[] width, int[] align) {
+    public void printTableItem(String[] text, int[] width, int[] align, boolean bold, boolean underline) {
         if (lineApi == null) {
             return;
         }
@@ -277,20 +311,24 @@ public class AidlUtil {
             TextStyle[] styles = new TextStyle[align.length];
             for (int indice= 0; indice < align.length; indice ++){
                 int alignData = align[indice];
-                String position = "DEFAULT";
-                switch (alignData){
-                    case 1:
-                        position = "LEFT";
-                        break;
-                    case 2:
-                        position = "CENTER";
-                        break;
-                    case 3:
-                        position = "RIGHT";
-                        break;
+                TextStyle textStyle = TextStyle.getStyle().enableBold(bold).enableUnderline(underline);
+                if (sizeFont > 0){
+                    textStyle = TextStyle.getStyle().enableBold(bold).enableUnderline(underline).setTextSize(sizeFont);
                 }
 
-                styles[indice] = TextStyle.getStyle().setAlign(Align.valueOf(position));
+                switch (alignData){
+                    case 0:
+                        textStyle = textStyle.setAlign(Align.LEFT);
+                        break;
+                    case 1:
+                        textStyle = textStyle.setAlign(Align.CENTER);
+                        break;
+                    case 2:
+                        textStyle = textStyle.setAlign(Align.RIGHT);
+                        break;
+                };
+
+                styles[indice] = textStyle;
             }
 
             lineApi.printTexts(text, width, styles);

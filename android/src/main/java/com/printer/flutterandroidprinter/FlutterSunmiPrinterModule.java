@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
+import java.util.List;
 import android.net.Uri;
 import android.os.Build;
 
@@ -35,12 +36,12 @@ public class FlutterSunmiPrinterModule {
 
   public void initAidl(Context context) {
     this.context = context;
-    initPrinter();
+    initPrinter(context);
   }
 
-  private void initPrinter() {
+  private void initPrinter(Context context) {
     try {
-      PrinterSdk.getInstance().getPrinter(this, new PrinterSdk.PrinterListen() {
+      PrinterSdk.getInstance().getPrinter(context, new PrinterSdk.PrinterListen() {
         @Override
         public void onDefPrinter(PrinterSdk.Printer printer) {
           selectPrinter = printer;
@@ -57,13 +58,17 @@ public class FlutterSunmiPrinterModule {
   }
 
   public void reset() {
-    initPrinter();
+    initPrinter(context);
   }
 
   public void startPrint() {
     isPrinting = true;
-    if (selectPrinter != null) {
-      AidlUtil.getInstance().initPrinter(selectPrinter.lineApi());
+    try {
+      if (selectPrinter != null) {
+        AidlUtil.getInstance().initPrinter(selectPrinter.lineApi());
+      }
+    } catch (SdkException e) {
+      e.printStackTrace();
     }
   }
 
@@ -101,29 +106,43 @@ public class FlutterSunmiPrinterModule {
   }
 
   public void text(String text, int align, boolean bold, boolean underline, int size, int linesAfter) {
-    // Set styles
-    if (bold) {
-      boldOn();
-    }
-    if (underline) {
-      underlineOn();
-    }
+//    // Set styles
+//    if (bold) {
+//      boldOn();
+//    }
+//    if (underline) {
+//      underlineOn();
+//    }
 
     // Print text
-    setFontSize(size);
-    AidlUtil.getInstance().printTableItem(new String[] { text }, new int[] { 32 }, new int[] { align });
+//    setFontSize(size);
+//    AidlUtil.getInstance().printTableItem(new String[] { text }, new int[] { 32 }, new int[] { align });
+
+    switch (align){
+      case 0:
+        AidlUtil.getInstance().sendRawData(ESCUtil.alignLeft(), selectPrinter);
+        break;
+      case 1:
+        AidlUtil.getInstance().sendRawData(ESCUtil.alignCenter(), selectPrinter);
+        break;
+      case 2:
+        AidlUtil.getInstance().sendRawData(ESCUtil.alignRight(), selectPrinter);
+        break;
+    };
+    AidlUtil.getInstance().printText(text, size, bold, underline, align);
     if (linesAfter > 0) {
       emptyLines(linesAfter);
     }
-    setFontSize(DEFAULT_FONT_SIZE);
+    AidlUtil.getInstance().sendRawData(ESCUtil.alignLeft(), selectPrinter);
+//    setFontSize(DEFAULT_FONT_SIZE);
 
     // Reset styles
-    if (bold) {
-      boldOff();
-    }
-    if (underline) {
-      underlineOff();
-    }
+//    if (bold) {
+//      boldOff();
+//    }
+//    if (underline) {
+//      underlineOff();
+//    }
   }
 
   public void row(String colsStr, boolean bold, boolean underline, int textSize, int linesAfter) {
@@ -153,7 +172,7 @@ public class FlutterSunmiPrinterModule {
 
       // Print row
       setFontSize(textSize);
-      AidlUtil.getInstance().printTableItem(colsText, colsWidth, colsAlign);
+      AidlUtil.getInstance().printTableItem(colsText, colsWidth, colsAlign, bold, underline);
       if (linesAfter > 0) {
         emptyLines(linesAfter);
       }
@@ -184,6 +203,7 @@ public class FlutterSunmiPrinterModule {
   }
 
   public void printQr(String text, int align, int size, String errorCorrectionLevel) {
-    AidlUtil.getInstance().printBitmap(BitmapUtil.generateBitmap(text,9,size,size, errorCorrectionLevel), align);
+//    AidlUtil.getInstance().printBitmap(BitmapUtil.generateBitmap(text,9,size,size, errorCorrectionLevel), align);
+    AidlUtil.getInstance().printQr(text, size, errorCorrectionLevel, align);
   }
 }

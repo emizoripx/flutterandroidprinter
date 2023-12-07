@@ -16,6 +16,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   void _print() async {
     // Test regular text
+    SunmiPrinter.startPrint();
     SunmiPrinter.hr();
     SunmiPrinter.text(
       'Prueba impresión Sunmi',
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> {
     SunmiPrinter.codeQr('https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=311710026&cuf=1553FC196BCFC6B17CB1F53FAC68D9707EA86281079197E1DEB6BDC74&numero=232',size:250);
 
     SunmiPrinter.emptyLines(3);
+    SunmiPrinter.stopPrint();
   }
 
   @override
@@ -76,7 +78,7 @@ class _MyAppState extends State<MyApp> {
           children: <Widget>[
             SizedBox(height: 50),
             Center(
-              child: RaisedButton(
+              child: TextButton(
                 onPressed: _print,
                 child: const Text('Prueba DEMO', style: TextStyle(fontSize: 20)),
               ),

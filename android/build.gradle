@@ -40,4 +40,5 @@ dependencies{
     // https://mvnrepository.com/artifact/com.google.zxing/core
     compileOnly(name: 'core-3.4.0', ext: 'jar')
     implementation 'com.google.zxing:core:3.3.3'
+    implementation 'com.sunmi:printerx:1.0.13'
 }

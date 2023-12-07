@@ -15,9 +15,9 @@ import 'sunmi_styles.dart';
 
 class SunmiPrinter {
   static const String RESET = "reset";
-  // static const String START_PRINT = "startPrint";
-  // static const String STOP_PRINT = "stopPrint";
-  // static const String IS_PRINTING = "isPrinting";
+  static const String START_PRINT = "startPrint";
+  static const String STOP_PRINT = "stopPrint";
+  static const String IS_PRINTING = "isPrinting";
   static const String BOLD_ON = "boldOn";
   static const String BOLD_OFF = "boldOff";
   static const String UNDERLINE_ON = "underlineOn";
@@ -35,17 +35,17 @@ class SunmiPrinter {
     await _channel.invokeMethod(RESET);
   }
 
-  // static Future<void> startPrint() async {
-  //   await _channel.invokeMethod(START_PRINT);
-  // }
+  static Future<void> startPrint() async {
+    await _channel.invokeMethod(START_PRINT);
+  }
 
-  // static Future<void> stopPrint() async {
-  //   await _channel.invokeMethod(STOP_PRINT);
-  // }
+  static Future<void> stopPrint() async {
+    await _channel.invokeMethod(STOP_PRINT);
+  }
 
-  // static Future<void> isPrinting() async {
-  //   await _channel.invokeMethod(IS_PRINTING);
-  // }
+  static Future<void> isPrinting() async {
+    await _channel.invokeMethod(IS_PRINTING);
+  }
 
   /// Print [text] with [styles] and skip [linesAfter] after
   static Future<void> text(

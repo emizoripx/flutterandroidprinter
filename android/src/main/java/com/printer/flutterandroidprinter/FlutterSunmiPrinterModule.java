@@ -22,28 +22,54 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sunmi.printerx.PrinterSdk;
+import com.sunmi.printerx.SdkException;
+
 public class FlutterSunmiPrinterModule {
 
   private static boolean isPrinting = false;
   public static int DEFAULT_FONT_SIZE = 24;
   private Context context;
 
+  private PrinterSdk.Printer selectPrinter;
+
   public void initAidl(Context context) {
-    AidlUtil.getInstance().connectPrinterService(context);
-    AidlUtil.getInstance().initPrinter();
     this.context = context;
+    initPrinter();
+  }
+
+  private void initPrinter() {
+    try {
+      PrinterSdk.getInstance().getPrinter(this, new PrinterSdk.PrinterListen() {
+        @Override
+        public void onDefPrinter(PrinterSdk.Printer printer) {
+          selectPrinter = printer;
+        }
+
+        @Override
+        public void onPrinters(List<PrinterSdk.Printer> printers) {
+
+        }
+      });
+    } catch (SdkException e) {
+      e.printStackTrace();
+    }
   }
 
   public void reset() {
-    AidlUtil.getInstance().initPrinter();
+    initPrinter();
   }
 
   public void startPrint() {
     isPrinting = true;
+    if (selectPrinter != null) {
+      AidlUtil.getInstance().initPrinter(selectPrinter.lineApi());
+    }
   }
 
   public void stopPrint() {
     isPrinting = false;
+    AidlUtil.getInstance().endPrinter();
   }
 
   public boolean isPrinting() {
@@ -51,19 +77,19 @@ public class FlutterSunmiPrinterModule {
   }
 
   public void boldOn() {
-    AidlUtil.getInstance().sendRawData(ESCUtil.boldOn());
+    AidlUtil.getInstance().sendRawData(ESCUtil.boldOn(), selectPrinter);
   }
 
   public void boldOff() {
-    AidlUtil.getInstance().sendRawData(ESCUtil.boldOff());
+    AidlUtil.getInstance().sendRawData(ESCUtil.boldOff(), selectPrinter);
   }
 
   public void underlineOn() {
-    AidlUtil.getInstance().sendRawData(ESCUtil.underlineWithOneDotWidthOn());
+    AidlUtil.getInstance().sendRawData(ESCUtil.underlineWithOneDotWidthOn(), selectPrinter);
   }
 
   public void underlineOff() {
-    AidlUtil.getInstance().sendRawData(ESCUtil.underlineOff());
+    AidlUtil.getInstance().sendRawData(ESCUtil.underlineOff(), selectPrinter);
   }
 
   public void emptyLines(int n) {

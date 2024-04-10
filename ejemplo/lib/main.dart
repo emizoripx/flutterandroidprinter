@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
     );
 
     // Test image
-    ByteData bytes = await rootBundle.load('assets/rabbit_black.jpg');
+    ByteData bytes = await rootBundle.load('assets/rabbit_black.png');
     final buffer = bytes.buffer;
     final imgData = base64.encode(Uint8List.view(buffer));
     SunmiPrinter.image(imgData);

@@ -4,20 +4,18 @@ version '1.0'
 buildscript {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 
     dependencies {
-//        classpath 'com.android.tools.build:gradle:3.5.0'
-        classpath 'com.android.tools.build:gradle:8.2.0'
+        classpath 'com.android.tools.build:gradle:8.7.0'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10'
     }
 }
 
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
         flatDir {
             dirs project(':flutterandroidprinter').file('libs')
@@ -28,11 +26,12 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 33
+    namespace 'com.printer.flutterandroidprinter'
+    compileSdkVersion 35
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     defaultConfig {
@@ -47,6 +46,6 @@ dependencies{
     implementation(name: 'payLib', ext: 'aar')
     // https://mvnrepository.com/artifact/com.google.zxing/core
     compileOnly(name: 'core-3.4.0', ext: 'jar')
-    implementation 'com.google.zxing:core:3.3.3'
+    implementation 'com.google.zxing:core:3.5.3'
     implementation 'com.sunmi:printerx:1.0.13'
 }
